@@ -6,7 +6,7 @@
 function createMap(){
     //create the map
     var map = L.map('map', {
-        center: [0, 20],
+        center: [-4, 20],
         zoom: 4,
         zoomControl: false
     });
@@ -28,19 +28,10 @@ function createMap(){
     getData(map);
 };
 
-//calculate the radius of each proportional symbol
-function calcPropRadius(attValue) {
-    //scale factor to adjust symbol size evenly
-    var scaleFactor = 8;
-    //area based on attribute value and scale factor
-    var area = Math.abs(attValue) * scaleFactor;
-    //radius calculated based on area
-    var radius = Math.sqrt(area/Math.PI);
-    return radius;
-};
 
 
-//calculate a color for each proportional symbol for standard data
+
+//calculate a color for each symbol for recent insufficient fcs
 function calcColor(attValue) {
     //scale factor to adjust symbol size evenly
     return attValue >= 125 ? '#330000' :
@@ -52,7 +43,7 @@ function calcColor(attValue) {
     '#fff5f0';
 };
 
-//calculate a color for each proportional symbol for change in PM2.5
+//calculate a color for each proportional symbol for education
 function calcColorChange(attValue) {
     //scale factor to adjust symbol size evenly
     return attValue >= 50 ? '#d73027' : // Means: if (d >= 1966) return 'green' else…
@@ -110,7 +101,7 @@ function addSearch(map, data) {
             };
     console.log(data.responseJSON.features[1])
     for(i in data.responseJSON.features) {
-		var title = data.responseJSON.features[i].properties.Urban_Agglomeration,	//value searched
+		var title = data.responseJSON.features[i].properties.Name_1,	//value searched
 			loc_lat = data.responseJSON.features[i].geometry.coordinates[0],
             loc_lon =
             data.responseJSON.features[i].geometry.coordinates[1]
@@ -549,12 +540,12 @@ function moveLegend(viztype) {
 //Step 2: Import GeoJSON data
 function getData(map){
     //load the data
-    var data = $.ajax("https://raw.githubusercontent.com/aldenkyle/leaflet-lab/main/data/cities_pop_estimates_Feature.json", {
+    var data = $.ajax("https://raw.githubusercontent.com/vcj/geog575proj_AJJD/main/data/GADM1_SSA_HungEdu.geojson", {
         dataType: "json",
         success: function(response){
              //create an attributes array, base year and base viz
-            var attributes = ['ppm_1998','ppm_1999', 'ppm_2000', 'ppm_2001', 'ppm_2002', 'ppm_2003', 'ppm_2004', 'ppm_2005', 'ppm_2006', 'ppm_2007', 'ppm_2008', 'ppm_2009', 'ppm_2010', 'ppm_2011', 'ppm_2012', 'ppm_2013', 'ppm_2014', 'ppm_2015', 'ppm_2016', 'ppm_2017', 'ppm_2018', 'ppm_2019'];
-            var viztype = "ppm_viz"
+            var attributes = ['Oct_2021','Nov_2021', 'Dec_2021', 'Jan_2022','Feb_2022','Mar_2022','Apr_2022','May_2022','Jun_2022','Jul_2022','Aug_2022','Sep_2022','Oct_2022','Nov_2022'];
+            var viztype = "Nov_2022"
             var year = "1998"
             createPropSymbols(response, map,attributes,viztype);
             createControls(map, year);
