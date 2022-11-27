@@ -3,50 +3,36 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width">
-		<title>put title here</title>
-
-		<!--put your external stylesheet links here-->
-         <link href="//unpkg.com/leaflet@1.6.0/dist/leaflet.css" rel="stylesheet">
-         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
-     integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
-     crossorigin=""/>
+        <meta charset="utf-8">
+		<title>Progress on Polution?</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.1/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
 		<link rel="stylesheet" href="css/style.css">
-		<!--[if IE<9]>
-			<link rel="stylesheet" href="css/style.ie.css">
-		<![endif]-->
-         <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
-     integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
-     crossorigin=""></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-search@2.3.7/dist/leaflet-search.src.css" />
+        <link rel="stylesheet" href="css/main.css">
+        <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
 	</head>
-
 	<body>
-		<!--put your initial page content here-->
-	<div class="header"></div>
-        <div class="header-cont">
-            <div style="color: cadetblue"><center><h1>header content</h1></center></div>
-               <center><h3>subhead</h3></center>
-        </div>
-        <div id="mapcontainer">
-	       <div id="map" class="leaflet-container"></div>
-           <div id="slider"></div>
-            	<div id="source"></div>
-        <div class="source-cont">
-            <div style="color: cadetblue"><left></div>
-               <h5><p>additional text</p></h5>
-
-                
-        </div>
-        
-
-		<!--scripts-->
- <script src="//unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-    <script src="js/leaflet-search-master/src/leaflet-search.js"></script>
-		<script src="js/jquery.js"></script>
-		<script src="lib/leaflet/leaflet.js"></script>
-        <script src="data/stateData.js"></script>
-		<script src="js/main2.js"></script>
-        
+        <div id="map" style="z-index: 1; position: absolute; top: 0; left: 0;"></div>
+        <div id="head-desc" style="z-index: 2; position: absolute; top: 0; left: 0; width: 99.5%" ><h1 style="color:white; font-size: 1.8em; text-align: left; line-height: normal; margin-top:5px; margin-left:20px ">PROGRESS ON POLUTION? Changes in satelite-derived particulate matter estimates from 1998 to 2019</h1><p style="color:white; font-size: 1em; text-align: left; line-height:normal; margin-top:-10px; margin-left:20px; margin-right:10px">Despite progress in reducing pollution across developed countries, exposure to outdoor fine particulate matter (PM2.5)—a leading risk factor for mortality—remains high for much of the world’s population. Here we depict satellite-derived annual average concentrations of all ground-level fine particulate matter for all cities assessed to have a population over 300,000. You can switch between views showing the satellite derived estimates for each year, the change in PM2.5 from our baseline of 1998-2000, and the percent change from our baseline. <br> Sources: PM2.5 Estimates: <a href="https://sedac.ciesin.columbia.edu/data/set/sdei-global-annual-gwr-pm2-5-modis-misr-seawifs-aod-v4-gl-03" target="_blank" style="color:#76b5c5">Data</a>, <a href="https://pubs.acs.org/doi/10.1021/acs.est.0c01764" target="_blank" style="color:#76b5c5">Documentation</a> | Population Estimates: <a href="https://data.london.gov.uk/dataset/global-city-population-estimates" target="_blank" style="color:#76b5c5">Data</a>.</p></div>
+        <div id="panel" style="z-index: 2; position: absolute; bottom: 0; left: 0;  width: 99%;" ></div>
+        <div id="panel2", style="z-index: 3; position: absolute; bottom: 70px; left: 0; color:white; font-size:20px;  width: 99% " > <b>Select Visualization:  </b></div>
+        <script type="text/javascript" src="lib/jquery-3.6.1.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+   integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+   crossorigin=""></script>
+        <script src="https://unpkg.com/leaflet-search@2.3.7/dist/leaflet-search.src.js"></script>
+        <script src="data/data-test.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
 	</body>
-	</html>
+</html>
