@@ -30,6 +30,46 @@ function createMap(){
 
 
 
+
+//add search - this was very annoying had to add on the same points again as a Marker layer but transparent
+function addSearch(map, data) {
+    var markersLayer = new L.LayerGroup();	//layer contain searched elements
+    map.addLayer(markersLayer);
+    var controlSearch = new L.Control.Search({
+		position:'topleft',		
+		layer: markersLayer,
+		initial: true,
+		zoom: 8,
+		marker: false
+	});
+    map.addControl( controlSearch );
+    var circleIcon = L.icon({
+    iconUrl: 'img/circle-outline-svgrepo-com.svg',
+    iconSize:     [1, 1], // size of the icon
+    });
+    var geojsonMarkerOptions2 = {
+                radius: 1,
+                fillColor: "#ff7800",
+                color: "#000",
+                weight: 0,
+                opacity: 0,
+                fillOpacity: 0,
+                title: title
+            };
+    console.log(data.responseJSON.features[1].properties)
+    for(i in data.responseJSON.features) {
+		var title = data.responseJSON.features[i].properties.NAME_1,	//value searched
+			loc_lat = data.responseJSON.features[i].properties.lon_cent,
+            loc_lon = data.responseJSON.features[i].properties.lat_cent
+            //position found
+			marker = new L.Marker( new L.latLng([loc_lon, loc_lat]), {title:title, icon:circleIcon, opacity:0, fillOpacity:0} )
+		markersLayer.addLayer(marker);
+	}
+}
+
+
+
+
 //calculate a color for each symbol for recent insufficient fcs
 function calcColor(attValue) {
     //scale factor to adjust symbol size evenly
@@ -156,7 +196,7 @@ function getData(map){
             var attributes = ['Oct_2021','Nov_2021', 'Dec_2021', 'Jan_2022','Feb_2022','Mar_2022','Apr_2022','May_2022','Jun_2022','Jul_2022','Aug_2022','Sep_2022','Oct_2022','Nov_2022'];
             var viztype = "Nov_2022"
             symbolize(response, map,attributes,viztype);
-            //addSearch(map, data);
+            addSearch(map, data);
             createLegend(map, data, attributes,viztype);
             selectVizType(map,data,attributes,viztype);
             moveLegend(viztype);
