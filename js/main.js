@@ -68,7 +68,31 @@ function addSearch(map, data) {
 }
 
 
+//calculate a color for each symbol for recent insufficient fcs
+function initColor(attValue) {
+    //scale factor to adjust symbol size evenly
+    return attValue == "High IFC, High Edu" ? '#574249' :
+    attValue == "High IFC, Low Edu" ? '#c85a5a' : // Means: if (d >= 1966) return 'green' else…
+    attValue == "Lower  IFC, High Edu" ? '#64acbe' : // if (d >= 1960) return 'black' else etc…
+    attValue == "Lower IFC, Low Edu" ? '#e8e8e8' :
+    attValue == "No Data" ? '#ffffff' : // Note that numbers must be in descending order
+    '#6c83b5';
+};
 
+
+//calculate a color for each symbol for recent insufficient fcs
+function initColorBorder(attValue, attValue2) {
+    //scale factor to adjust symbol size evenly
+    return  (attValue == "Rising 2" && attValue2 == "High IFC, High Edu") ? '#FFE43E' :
+    '#FFFFFF';
+};
+
+//calculate a color for each symbol for recent insufficient fcs
+function initBorderWeight(attValue, attValue2) {
+    //scale factor to adjust symbol size evenly
+    return (attValue == "Rising 2" && attValue2 == "High IFC, High Edu") ? 2 :
+    .5;
+};
 
 //calculate a color for each symbol for recent insufficient fcs
 function calcColor(attValue) {
@@ -86,11 +110,10 @@ function calcColor(attValue) {
 
 function style(feature) {
     return {
-        fillColor: calcColor(feature.properties.Nov_2022),
-        weight: .5,
+        fillColor: initColor(feature.properties.Food_Edu),
+        weight: initBorderWeight(feature.properties.Hunger_Ris, feature.properties.Food_Edu),
         opacity: 1,
-        color: 'white',
-        dashArray: '3',
+        color: initColorBorder(feature.properties.Hunger_Ris, feature.properties.Food_Edu),
         fillOpacity: 0.7
     };
 }
