@@ -118,6 +118,15 @@ function style(feature) {
     };
 }
 
+function style2(feature) {
+    return {
+        weight: 1,
+        opacity: 1,
+        color: "#6E6E6E",
+        fillOpacity: 0
+    };
+}
+
 
 // function for original symbology
 function symbolize(data, map, attributes, viztypes,markersLayer){
@@ -127,8 +136,15 @@ function symbolize(data, map, attributes, viztypes,markersLayer){
             }).addTo(map);
 
 };
-
-
+// function for original Country Lines
+function symbolizeLines(data, map){
+    $.getJSON("https://raw.githubusercontent.com/vcj/geog575proj_AJJD/main/data/GADM0_SSA.geojson",function(data2){
+    // L.geoJson function is used to parse geojson file and load on to map
+    L.geoJson(data2, {
+        style:style2
+            }).addTo(map);
+    });
+};
 
 
 // Create Buttons to switch viz type
@@ -219,6 +235,7 @@ function getData(map){
             var attributes = ['Oct_2021','Nov_2021', 'Dec_2021', 'Jan_2022','Feb_2022','Mar_2022','Apr_2022','May_2022','Jun_2022','Jul_2022','Aug_2022','Sep_2022','Oct_2022','Nov_2022'];
             var viztype = "Nov_2022"
             symbolize(response, map,attributes,viztype);
+            symbolizeLines(data, map);
             addSearch(map, data);
             createLegend(map, data, attributes,viztype);
             selectVizType(map,data,attributes,viztype);
