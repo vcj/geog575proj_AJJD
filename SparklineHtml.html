@@ -3,9 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Sparkline Charts</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.1/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-search@2.3.7/dist/leaflet-search.src.css" />
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
 <div id="container"></div>
+<div id="map" style="z-index: 1; position: absolute; top: 0; left: 0;"></div>
+<div id="head-desc" style="z-index: 2; position: absolute; top: 0; left: 0; width: 99.5%" ><h1 style="color:white; font-size: 1.8em; text-align: left; line-height: normal; margin-top:5px; margin-left:20px ">Targeting McGovern-Dole Investments</h1><p style="color:white; font-size: 1em; text-align: left; line-height:normal; margin-top:-10px; margin-left:20px; margin-right:10px">This tool combines near-real time data on insufficient food consumption from the World Food Program with recent subnational information on educational attainment across low and lower-middle income countries in Sub-Saharan Africa. <br> Sources: Recent Prevalence of Insufficient Food Consumption: <a href="https://hungermap.wfp.org/" target="_blank" style="color:#76b5c5">Data</a> | Educational Attainment: <a href="https://ghdx.healthdata.org/record/ihme-data/lmic-education-geospatial-estimates-2000-2017" target="_blank" style="color:#76b5c5">Data</a>.</p></div>
+<script type="text/javascript" src="lib/jquery-3.6.1.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+        integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+        crossorigin=""></script>
+<script src="https://unpkg.com/leaflet-search@2.3.7/dist/leaflet-search.src.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
 <script type="text/javascript" src="lib/anychart-sparkline.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-data-adapter.min.js"></script>
+<script type="text/javascript" src="js/popups.js"></script>
 </body>
 </html>
