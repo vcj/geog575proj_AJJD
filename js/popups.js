@@ -64,6 +64,7 @@ function addSearch(map, data) {
         //position found
         marker = new L.Marker( new L.latLng([loc_lon, loc_lat]), {title:title, icon:circleIcon, opacity:0, fillOpacity:0} )
         markersLayer.addLayer(marker);
+
     }
 }
 
