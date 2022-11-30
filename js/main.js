@@ -105,6 +105,19 @@ function calcColor(attValue) {
     attValue >= 0 ? '#fee0d2' : // Note that numbers must be in descending order
     '#fff5f0';
 };
+//calculate a color for each symbol for recent insufficient fcs
+
+function calcColorEdu(attValue) {
+    //scale factor to adjust symbol size evenly
+    return attValue >= 12 ? '#08589e' :
+    attValue >= 10 ? '#2b8cbe' : // Means: if (d >= 1966) return 'green' else…
+    attValue >= 8 ? '#4eb3d3' : // if (d >= 1960) return 'black' else etc…
+    attValue >= 6 ? '#7bccc4' :
+    attValue >= 4 ? '#a8ddb5' : // Note that numbers must be in descending order
+    attValue >= 2 ? '#ccebc5' : // Note that numbers must be in descending order
+    '#f0f9e8';
+};
+
 
 
 
@@ -129,7 +142,7 @@ function style2(feature) {
 
 
 // function for original symbology
-function symbolize(data, map, attributes, viztypes,markersLayer){
+function symbolize(data, map){
     //create marker default options
     L.geoJson(data, {
         style:style
@@ -147,33 +160,89 @@ function symbolizeLines(data, map){
 };
 
 
+//Step 10: update symbology based on the feature
+function updatePropSymbols(map, attribute,viztypef){
+    map.eachLayer(function(layer){
+         if (layer.feature && layer.feature.properties[attribute]){
+            viz_type = viztypef
+            var props = layer.feature.properties;
+            //console.log(props)
+            // set up vars for this attribute
+            var curVal = Number(props[attribute]);
+            //update color and size if female education
+            if (viz_type == "Female_Edu"){
+            var fillColo = calcColorEdu(curVal);
+            layer.setStyle({fillColor:fillColo});}
+             //update color and size if percent change
+            if (viz_type == "Male_Educa"){
+            var fillColo = calcColorEdu(curVal);
+            layer.setStyle({fillColor:fillColo});}
+            //update color and size if percent change
+            if (viz_type == "Food_Edu"){
+            var curVal = props[attribute]
+            var fillColo = initColor(curVal);
+            layer.setStyle({fillColor:fillColo});}
+            //update color and size if percent change
+            else if ( viz_type == "ppm_pctChange") {
+             var radius = calcPropRadius(pctChgVal);
+            layer.setRadius(radius);
+            var fillColo = calcColorPctChange(pctChgVal);
+            layer.setStyle({fillColor:fillColo});}   
+        };
+    });
+};
+
+
+function createControls(map,year,vizType){
+    $('#panel').append('<button class="skip" id="reverse">Previous Month</button>');
+    //create range input element (slider)
+    $('#panel').append('<input class="range-slider" type="range">');
+   //set slider attributes
+    $('.range-slider').attr({
+        max: 21,
+        min: 0,
+        value: 0,
+        step: 1
+    });
+    $('#panel').append('<button class="skip" id="curr_year">' + vizType +'</button>');
+    $('#panel').append('<button class="skip" id="forward">Next Month</button>');
+    
+};
+
 // Create Buttons to switch viz type
 function selectVizType(map, data, attributes, viztype2) {
     //create 3 buttons
-    $('#panel2').append('<button class="vis_select active" id="ppm" name="ppm" type="button">Recent Insufficient Food Consumption</button>')
-    $('#panel2').append('<button class="vis_select" id="ppm_change" name="ppm_change" type="button">Female Average Educational Attainment (2017)</button>')
-    $('#panel2').append('<button class="vis_select" id="ppm_pctChange" name="ppm_pctChange" type="button">Male Average Educational Attainment (2017))</button>')
+    $('#panel2').append('<button class="vis_select active" id="result" name="result" type="button">Top Locations to Target</button>')
+    $('#panel2').append('<button class="vis_select" id="ifs" name="ifs" type="button">Recent Insufficient Food Consumption</button>')
+    $('#panel2').append('<button class="vis_select" id="f_edu" name="f_edu" type="button">Female Average Educational Attainment (2017)</button>')
+    $('#panel2').append('<button class="vis_select" id="m_edu" name="m_edu" type="button">Male Average Educational Attainment (2017)</button>')
     // set up listenters so that when clicked, a var will change that will be used in UpdatePropSymbols
     $('.vis_select').unbind().click(function(){
         //change color of selected button
         $('button').removeClass('active');
         $(this).addClass('active');
         // if the button is slected, change the viztype, then run manage, update
-        if ($(this).attr('id') == 'ppm'){
-            viztype2 = "ppm_viz"
-            manageSequence(map,data, attributes, viztype2);
-           updateLegend(map, data, attributes,viztype2);
+        if ($(this).attr('id') == 'result'){
+            viztype2 = "Food_Edu"
+            updatePropSymbols(map, attributes[16],viztype2);
+            updateLegend(map, data, attributes,viztype2);
             moveLegend(viztype2);
             ;}
-         else if ($(this).attr('id') == 'ppm_change'){
-            viztype2 = "ppm_change"
+         else if ($(this).attr('id') == 'ifs'){
+            viztype2 = "Oct_2021"
+            var month = "Oct_2021"
+            createControls(map,month,viztype2)
             manageSequence(map,data,attributes, viztype2);
+            updateLegend(map, data);}
+         else if ($(this).attr('id') == 'f_edu'){
+            viztype2 = "Female_Edu"
+            updatePropSymbols(map, attributes[14],viztype2);
             updateLegend(map, data, attributes,viztype2);
-         moveLegend(viztype2);}
+            moveLegend(viztype2);}
          
-         else if ($(this).attr('id') == 'ppm_pctChange'){
-            viztype2 = "ppm_pctChange"
-            manageSequence(map,data,attributes, viztype2);
+         else if ($(this).attr('id') == 'm_edu'){
+            viztype2 = "Male_Educa"
+             updatePropSymbols(map, attributes[15],viztype2);
          updateLegend(map, data, attributes,viztype2);
              moveLegend(viztype2);
          }
@@ -232,7 +301,7 @@ function getData(map){
         dataType: "json",
         success: function(response){
              //create an attributes array, base year and base viz
-            var attributes = ['Oct_2021','Nov_2021', 'Dec_2021', 'Jan_2022','Feb_2022','Mar_2022','Apr_2022','May_2022','Jun_2022','Jul_2022','Aug_2022','Sep_2022','Oct_2022','Nov_2022'];
+            var attributes = ['Oct_2021','Nov_2021', 'Dec_2021', 'Jan_2022','Feb_2022','Mar_2022','Apr_2022','May_2022','Jun_2022','Jul_2022','Aug_2022','Sep_2022','Oct_2022','Nov_2022', 'Female_Edu', 'Male_Educa', 'Food_Edu'];
             var viztype = "Nov_2022"
             symbolize(response, map,attributes,viztype);
             symbolizeLines(data, map);
