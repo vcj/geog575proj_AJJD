@@ -147,7 +147,9 @@ function symbolize(data, map){
     //create marker default options
     L.geoJson(data, {
         style:style
-            }).addTo(map);
+            })
+        .bindPopup("test")
+        .addTo(map);
 
 };
 // function for original Country Lines
@@ -162,7 +164,7 @@ function symbolizeLines(data, map){
 
 
 //Step 10: update symbology based on the feature
-function updatePropSymbols(map, attribute,viztypef){
+function updateSymbols(map, attribute,viztypef){
     map.eachLayer(function(layer){
          if (layer.feature && layer.feature.properties[attribute]){
             viz_type = viztypef
@@ -190,6 +192,9 @@ function updatePropSymbols(map, attribute,viztypef){
             else if (viz_type.includes("20")) {
             var fillColo = calcColor(curVal);
             layer.setStyle({fillColor:fillColo,color:"#FFFFFF",weight:.5});}   
+             //set popups
+            var month = attribute.split("_")[0] + " " + attribute.split("_")[1] ;
+            $("#curr_year").html(month);
         };
     });
 };
@@ -230,14 +235,14 @@ function manageSequence(map, data, attributes, viztype){
             //Step 7: if past the last attribute, wrap around to first attribute
             index = index > 13 ? 0 : index;
             $('.range-slider').val(index);
-            updatePropSymbols(map, attributes[index],viztype);
+            updateSymbols(map, attributes[index],viztype);
             //updateLegend(map, data, attributes,viztype);
         } else if ($(this).attr('id') == 'reverse'){
             index--;
             //Step 7: if past the first attribute, wrap around to last attribute
             index = index < 0 ? 13 : index;
             $('.range-slider').val(index);
-            updatePropSymbols(map, attributes[index],viztype);
+            updateSymbols(map, attributes[index],viztype);
             //updateLegend(map, data, attributes,viztype);
         };
 
@@ -248,13 +253,13 @@ function manageSequence(map, data, attributes, viztype){
     $('.range-slider').click(function(){
         //get the old index value
         var index = $('.range-slider').val();
-        updatePropSymbols(map, attributes[index], viztype);
+        updateSymbols(map, attributes[index], viztype);
         //updateLegend(map, data, attributes,viztype);
         //console.log(index)
     })
     //update even if it wasnt clicked (manageSequence is called by viztype)
     var index = $('.range-slider').val()
-    updatePropSymbols(map, attributes[index], viztype);
+    updateSymbols(map, attributes[index], viztype);
     //updateLegend(map, data, attributes,viztype);
 };
 
@@ -274,7 +279,7 @@ function selectVizType(map, data, attributes, viztype2) {
         console.log($(this).attr('id'))
         if ($(this).attr('id') == 'result'){
             viztype2 = "Food_Edu"
-            updatePropSymbols(map, attributes[16],viztype2);
+            updateSymbols(map, attributes[16],viztype2);
             removeControls(map)
             //updateLegend(map, data, attributes,viztype2);
             //moveLegend(viztype2);
@@ -287,14 +292,14 @@ function selectVizType(map, data, attributes, viztype2) {
          }
          else if ($(this).attr('id') == 'f_edu'){
             viztype2 = "Female_Edu"
-            updatePropSymbols(map, attributes[14],viztype2);
+            updateSymbols(map, attributes[14],viztype2);
             removeControls(map)
             //updateLegend(map, data, attributes,viztype2);
             //moveLegend(viztype2);
          }
          else if ($(this).attr('id') == 'm_edu'){
             viztype2 = "Male_Educa"
-             updatePropSymbols(map, attributes[15],viztype2);
+             updateSymbols(map, attributes[15],viztype2);
              removeControls(map)
          //updateLegend(map, data, attributes,viztype2);
             // moveLegend(viztype2);
