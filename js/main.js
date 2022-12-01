@@ -56,7 +56,7 @@ function addSearch(map, data) {
                 fillOpacity: 0,
                 title: title
             };
-    console.log(data.responseJSON.features[1].properties)
+    console.log(data.responseJSON.features[175].properties)
     for(i in data.responseJSON.features) {
 		var title = data.responseJSON.features[i].properties.NAME_1,	//value searched
 			loc_lat = data.responseJSON.features[i].properties.lon_cent,
@@ -97,13 +97,13 @@ function initBorderWeight(attValue, attValue2) {
 //calculate a color for each symbol for recent insufficient fcs
 function calcColor(attValue) {
     //scale factor to adjust symbol size evenly
-    return attValue >= .4 ? '#330000' :
-    attValue >= .3 ? '#67000d' : // Means: if (d >= 1966) return 'green' else…
-    attValue >= .2 ? '#a50f15' : // if (d >= 1960) return 'black' else etc…
-    attValue >= .1 ? '#ef3b2c' :
-    attValue >= .05 ? '#fb6a4a' : // Note that numbers must be in descending order
-    attValue >= 0 ? '#fee0d2' : // Note that numbers must be in descending order
-    attValue >= -999 ? '#fff5f0' :
+    return attValue*1 >= .4 ? '#330000' :
+    attValue*1 >= .3 ? '#67000d' : // Means: if (d >= 1966) return 'green' else…
+    attValue*1 >= .2 ? '#a50f15' : // if (d >= 1960) return 'black' else etc…
+    attValue*1 >= .1 ? '#ef3b2c' :
+    attValue*1 >= .05 ? '#fb6a4a' : // Note that numbers must be in descending order
+    attValue*1 >= -.0001 ? '#fee0d2' : // Note that numbers must be in descending order
+    attValue*1 >= -999 ? '#fff5f0' :
     '#fff5f0';
 };
 //calculate a color for each symbol for recent insufficient fcs
@@ -190,6 +190,7 @@ function updateSymbols(map, attribute,viztypef){
             layer.setStyle({fillColor:fillColo,color:borderColo,weight:borderWeight});}
             //update color and size if percent change
             else if (viz_type.includes("20")) {
+            var curVal = props[attribute]
             var fillColo = calcColor(curVal);
             layer.setStyle({fillColor:fillColo,color:"#FFFFFF",weight:.5});}   
              //set popups
@@ -276,7 +277,7 @@ function selectVizType(map, data, attributes, viztype2) {
         $('button').removeClass('active');
         $(this).addClass('active');
         // if the button is slected, change the viztype, then run manage, update
-        console.log($(this).attr('id'))
+        //console.log($(this).attr('id'))
         if ($(this).attr('id') == 'result'){
             viztype2 = "Food_Edu"
             updateSymbols(map, attributes[16],viztype2);
