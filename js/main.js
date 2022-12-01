@@ -103,6 +103,7 @@ function calcColor(attValue) {
     attValue >= .1 ? '#ef3b2c' :
     attValue >= .05 ? '#fb6a4a' : // Note that numbers must be in descending order
     attValue >= 0 ? '#fee0d2' : // Note that numbers must be in descending order
+    attValue >= -999 ? '#fff5f0' :
     '#fff5f0';
 };
 //calculate a color for each symbol for recent insufficient fcs
@@ -166,47 +167,95 @@ function updatePropSymbols(map, attribute,viztypef){
          if (layer.feature && layer.feature.properties[attribute]){
             viz_type = viztypef
             var props = layer.feature.properties;
-            //console.log(props)
+            //console.log(attribute)
             // set up vars for this attribute
-            var curVal = Number(props[attribute]);
+            var curVal = Number(props[attribute]) || -1;
             //update color and size if female education
             if (viz_type == "Female_Edu"){
             var fillColo = calcColorEdu(curVal);
-            layer.setStyle({fillColor:fillColo});}
+            layer.setStyle({fillColor:fillColo,color:"#FFFFFF",weight:.5});}
              //update color and size if percent change
             if (viz_type == "Male_Educa"){
             var fillColo = calcColorEdu(curVal);
-            layer.setStyle({fillColor:fillColo});}
+            layer.setStyle({fillColor:fillColo,color:"#FFFFFF",weight:.5});}
+            //layer.setStyle({color:"#FFFFFF"});
             //update color and size if percent change
             if (viz_type == "Food_Edu"){
             var curVal = props[attribute]
             var fillColo = initColor(curVal);
-            layer.setStyle({fillColor:fillColo});}
+            var borderWeight = initBorderWeight(layer.feature.properties.Hunger_Ris, layer.feature.properties.Food_Edu)
+            var borderColo = initColorBorder(layer.feature.properties.Hunger_Ris, layer.feature.properties.Food_Edu)
+            layer.setStyle({fillColor:fillColo,color:borderColo,weight:borderWeight});}
             //update color and size if percent change
-            else if ( viz_type == "ppm_pctChange") {
-             var radius = calcPropRadius(pctChgVal);
-            layer.setRadius(radius);
-            var fillColo = calcColorPctChange(pctChgVal);
-            layer.setStyle({fillColor:fillColo});}   
+            else if (viz_type.includes("20")) {
+            var fillColo = calcColor(curVal);
+            layer.setStyle({fillColor:fillColo,color:"#FFFFFF",weight:.5});}   
         };
     });
 };
 
 
-function createControls(map,year,vizType){
+function removeControls(map){
+    $('.skip').remove();
+    $('.range-slider').remove();
+}
+
+function createControls(map,vizType){
+    if (vizType.includes("20")) {
     $('#panel').append('<button class="skip" id="reverse">Previous Month</button>');
     //create range input element (slider)
     $('#panel').append('<input class="range-slider" type="range">');
    //set slider attributes
     $('.range-slider').attr({
-        max: 21,
+        max: 13,
         min: 0,
         value: 0,
         step: 1
     });
     $('#panel').append('<button class="skip" id="curr_year">' + vizType +'</button>');
-    $('#panel').append('<button class="skip" id="forward">Next Month</button>');
-    
+    $('#panel').append('<button class="skip" id="forward">Next Month</button>');}
+};
+
+
+//Step 1: Create new sequence controls
+function manageSequence(map, data, attributes, viztype){
+    //Step 5: click listener for buttons
+    //Example 3.12 line 2...Step 5: click listener for buttons
+    $('.skip').unbind().click(function(){
+        //get the old index value
+        var index = $('.range-slider').val();
+        //Step 6: increment or decrement depending on button clicked
+        if ($(this).attr('id') == 'forward'){
+            index++;
+            //Step 7: if past the last attribute, wrap around to first attribute
+            index = index > 13 ? 0 : index;
+            $('.range-slider').val(index);
+            updatePropSymbols(map, attributes[index],viztype);
+            //updateLegend(map, data, attributes,viztype);
+        } else if ($(this).attr('id') == 'reverse'){
+            index--;
+            //Step 7: if past the first attribute, wrap around to last attribute
+            index = index < 0 ? 13 : index;
+            $('.range-slider').val(index);
+            updatePropSymbols(map, attributes[index],viztype);
+            //updateLegend(map, data, attributes,viztype);
+        };
+
+        //Step 8: update slider
+        $('.range-slider').val(index);
+    });
+    //click listener for clicking on range
+    $('.range-slider').click(function(){
+        //get the old index value
+        var index = $('.range-slider').val();
+        updatePropSymbols(map, attributes[index], viztype);
+        //updateLegend(map, data, attributes,viztype);
+        //console.log(index)
+    })
+    //update even if it wasnt clicked (manageSequence is called by viztype)
+    var index = $('.range-slider').val()
+    updatePropSymbols(map, attributes[index], viztype);
+    //updateLegend(map, data, attributes,viztype);
 };
 
 // Create Buttons to switch viz type
@@ -222,29 +271,33 @@ function selectVizType(map, data, attributes, viztype2) {
         $('button').removeClass('active');
         $(this).addClass('active');
         // if the button is slected, change the viztype, then run manage, update
+        console.log($(this).attr('id'))
         if ($(this).attr('id') == 'result'){
             viztype2 = "Food_Edu"
             updatePropSymbols(map, attributes[16],viztype2);
-            updateLegend(map, data, attributes,viztype2);
-            moveLegend(viztype2);
+            removeControls(map)
+            //updateLegend(map, data, attributes,viztype2);
+            //moveLegend(viztype2);
             ;}
          else if ($(this).attr('id') == 'ifs'){
             viztype2 = "Oct_2021"
-            var month = "Oct_2021"
-            createControls(map,month,viztype2)
+            createControls(map,viztype2)
             manageSequence(map,data,attributes, viztype2);
-            updateLegend(map, data);}
+           // updateLegend(map, data);
+         }
          else if ($(this).attr('id') == 'f_edu'){
             viztype2 = "Female_Edu"
             updatePropSymbols(map, attributes[14],viztype2);
-            updateLegend(map, data, attributes,viztype2);
-            moveLegend(viztype2);}
-         
+            removeControls(map)
+            //updateLegend(map, data, attributes,viztype2);
+            //moveLegend(viztype2);
+         }
          else if ($(this).attr('id') == 'm_edu'){
             viztype2 = "Male_Educa"
              updatePropSymbols(map, attributes[15],viztype2);
-         updateLegend(map, data, attributes,viztype2);
-             moveLegend(viztype2);
+             removeControls(map)
+         //updateLegend(map, data, attributes,viztype2);
+            // moveLegend(viztype2);
          }
     });
    
@@ -306,9 +359,9 @@ function getData(map){
             symbolize(response, map,attributes,viztype);
             symbolizeLines(data, map);
             addSearch(map, data);
-            createLegend(map, data, attributes,viztype);
+            //createLegend(map, data, attributes,viztype);
             selectVizType(map,data,attributes,viztype);
-            moveLegend(viztype);
+            //moveLegend(viztype);
         }
     
     });
