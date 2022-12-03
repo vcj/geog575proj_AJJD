@@ -143,20 +143,24 @@ function style2(feature) {
 
 // function for original symbology with popups
 function symbolize(data, map){
-    //popup content string
-    var popupContent = '<h1>Country Name: </h1>' + '<h1>Region Name: </h1>' +
-        '<h1>Food Consumption: </h1>' + '<h1>Female Average Educational Attainment: </h1>'
-        + '<h1>Male Average Educational Attainment: </h1>';
 
     //for loop to assign variable to each needed property
-    //for (i in data.responseJSON.features) {
-        //var countryName = data.responseJSON.features[i].properties.NAME_0,
-        //var regionName = data.responseJSON.features[i].properties.NAME_1;
+    for (i in data.features) {
+        var countryName = data.features[i].properties.NAME_0;
+        var regionName = data.features[i].properties.NAME_1;
+        var nov22Food = data.features[i].properties.Nov_2022;
+        var femaleEdu = data.features[i].properties.Female_Edu;
+        var maleEdu = data.features[i].properties.Male_Educa;
+    for (var key in data.properties) {
+        popupContent = popupContent + key + ': ' + data.properties[key];
+        };
+   }
 
-    //for loop to iterate through properties
-    //for (var key in data.properties) {
-        //popupContent = popupContent + key + ': ' + data.properties[key];
-   // };
+    //popup content string
+    var popupContent = '<h1>Country Name: </h1>' + countryName + '<h1>Region Name: </h1>' + regionName +
+        '<h1> Percent of Population with Insufficient Food Consumption November 2022: </h1>' + nov22Food + '<h1>Female Average Educational Attainment: </h1>'
+        + femaleEdu + '<h1>Male Average Educational Attainment: </h1>' + maleEdu;
+
 
     //var properties = data.properties[attribute]
 //}
@@ -180,21 +184,6 @@ function symbolize(data, map){
        // }
    // };
 //};
-
-//function for popups
-function popUp(data, map) {
-    var popupLayer = L.geoJson(data, {
-        style: function (feature, layer) {
-            return feature.properties.style;
-        },
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.Name_0);
-        }
-    })
-    popupLayer.addData(polygon);
-    popupLayer.addTo(map);
-    console.log(popupLayer)
-};
 
 
 
