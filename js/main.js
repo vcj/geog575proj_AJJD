@@ -141,17 +141,63 @@ function style2(feature) {
     };
 }
 
-
-// function for original symbology
+// function for original symbology with popups
 function symbolize(data, map){
+    //popup content string
+    var popupContent = '<h1>Country Name: </h1>' + '<h1>Region Name: </h1>' +
+        '<h1>Food Consumption: </h1>' + '<h1>Female Average Educational Attainment: </h1>'
+        + '<h1>Male Average Educational Attainment: </h1>';
+
+    //for loop to assign variable to each needed property
+    //for (i in data.responseJSON.features) {
+        //var countryName = data.responseJSON.features[i].properties.NAME_0,
+        //var regionName = data.responseJSON.features[i].properties.NAME_1;
+
+    //for loop to iterate through properties
+    //for (var key in data.properties) {
+        //popupContent = popupContent + key + ': ' + data.properties[key];
+   // };
+
+    //var properties = data.properties[attribute]
+//}
     //create marker default options
     L.geoJson(data, {
         style:style
             })
-        .bindPopup("test")
+        .bindPopup(popupContent)
         .addTo(map);
-
+    console.log(data)
 };
+
+//function popUP(data, map){
+   // var popupLayer = L.geoJson(data, {
+      //  onEachFeature: onEachFeatureFunction
+   // }).addTo(map);
+
+    //function onEachFeatureFunction(feature, layer){
+       // if (feature.properties.NAME_0) {
+            //layer.bindPopup(feature.properties.NAME_0);
+       // }
+   // };
+//};
+
+//function for popups
+function popUp(data, map) {
+    var popupLayer = L.geoJson(data, {
+        style: function (feature, layer) {
+            return feature.properties.style;
+        },
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup(feature.properties.Name_0);
+        }
+    })
+    popupLayer.addData(polygon);
+    popupLayer.addTo(map);
+    console.log(popupLayer)
+};
+
+
+
 // function for original Country Lines
 function symbolizeLines(data, map){
     $.getJSON("https://raw.githubusercontent.com/vcj/geog575proj_AJJD/main/data/GADM0_SSA.geojson",function(data2){
@@ -376,5 +422,3 @@ function getData(map){
 
 
 $(document).ready(createMap);
-
-
