@@ -157,9 +157,9 @@ function symbolize(data, map){
    }
 
     //popup content string
-    var popupContent = '<h1>Country Name: </h1>' + countryName + '<h1>Region Name: </h1>' + regionName +
-        '<h1> Percent of Population with Insufficient Food Consumption November 2022: </h1>' + nov22Food + '<h1>Female Average Educational Attainment: </h1>'
-        + femaleEdu + '<h1>Male Average Educational Attainment: </h1>' + maleEdu;
+    var popupContent = '<h1>Country: </h1>' + countryName + '<h1>Region: </h1>' + regionName +
+        '<h1> Percent of Population with Insufficient Food Consumption November 2022: </h1>' + nov22Food + '<h1>Female Average Years of Educational Attainment: </h1>'
+        + femaleEdu + '<h1>Male Average Years of Educational Attainment: </h1>' + maleEdu;
 
 
     //var properties = data.properties[attribute]
@@ -407,6 +407,7 @@ function getData(map){
     
     });
 };
+
 
 
 
