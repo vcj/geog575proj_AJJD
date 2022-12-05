@@ -229,13 +229,13 @@ input[type="range"]:focus::-webkit-slider-thumb {
 
 * {
  font-size: 100%;
- font-family: Arial;
+ font-family: Gill Sans;
 }
 
 
 .legend, .temporal-legend {
 	padding: 6px 10px;
-	font: 14px/16px Arial, Helvetica, sans-serif;
+	font: 14px/16px Gill Sans, Gill Sans, sans-serif;
 	background: white;
 	background: rgba(255,255,255,.9);
 	box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -263,7 +263,7 @@ input[type="range"]:focus::-webkit-slider-thumb {
 }
 .colorLegend {
 padding: 6px 8px;
-font: 14px/16px Arial, Helvetica, sans-serif;
+font: 14px/16px Gill Sans, Gill Sans, sans-serif;
 background: rgba(255,255,255,0);
 box-shadow: 0 0 15px rgba(0,0,0,0);
 border-radius: 5px;
@@ -886,7 +886,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	text-align: center;
 	width: 24px;
 	height: 24px;
-	font: 16px/24px Tahoma, Verdana, sans-serif;
+	font: 16px/24px Gill Sans, Gill Sans, sans-serif;
 	color: #757575;
 	text-decoration: none;
 	background: transparent;
