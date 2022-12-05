@@ -145,11 +145,13 @@ function style2(feature) {
 function onEachFeature(feature,layer) {
     var countryName = feature.properties.NAME_0;
     var regionName = feature.properties.NAME_1;
-    var nov22Food = feature.properties.Nov_2022.toFixed(4)*100;
+    if (feature.properties.Nov_2022 == -.1) { 
+         var nov22Food = "No Data"} else
+     {var nov22Food = (feature.properties.Nov_2022*100).toFixed(1)};
     var femaleEdu = feature.properties.Female_Edu.toFixed(1);
     var maleEdu = feature.properties.Male_Educa.toFixed(1);
     var popupContent = '<b>' + regionName + ', ' + countryName + '</b><br>' +
-        'Insufficient Food Consumption (Nov 2022): <b>' + nov22Food.toFixed(2) + '%</b><br>Female Avg. Years of Educational Attainment: <b>'
+        'Insufficient Food Consumption (Nov 2022): <b>' + nov22Food+ '%</b><br>Female Avg. Years of Educational Attainment: <b>'
         + femaleEdu + '</b><br>Male Avg Years of Educational Attainment: <b>' + maleEdu + '</b><br>'
        ;
     layer.bindPopup(popupContent)
