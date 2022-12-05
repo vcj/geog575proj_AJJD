@@ -153,8 +153,9 @@ function symbolize(data, map){
         var femaleEdu = data.features[i].properties.Female_Edu;
         var maleEdu = data.features[i].properties.Male_Educa;
 
-    for (i in data.features.properties) {
-        popupContent = popupContent + i + ': ' + data.features.properties[i];
+    for (key in data.features.properties) {
+        console.log(key + data.features.properties[key])
+        popupContent = popupContent + key + ': ' + data.features.properties[key];
         };
    };
 
