@@ -147,23 +147,21 @@ function symbolize(data, map){
     //for loop to assign variable to each needed property
     for (i in data.features) {
         var countryName = data.features[i].properties.NAME_0;
+        //console.log(countryName)
         var regionName = data.features[i].properties.NAME_1;
         var nov22Food = data.features[i].properties.Nov_2022;
         var femaleEdu = data.features[i].properties.Female_Edu;
         var maleEdu = data.features[i].properties.Male_Educa;
-    for (var key in data.properties) {
-        popupContent = popupContent + key + ': ' + data.properties[key];
-        };
-   }
 
-    //popup content string
+    for (i in data.features.properties) {
+        popupContent = popupContent + i + ': ' + data.features.properties[i];
+        };
+   };
+
     var popupContent = '<h1>Country: </h1>' + countryName + '<h1>Region: </h1>' + regionName +
         '<h1> Percent of Population with Insufficient Food Consumption November 2022: </h1>' + nov22Food + '<h1>Female Average Years of Educational Attainment: </h1>'
         + femaleEdu + '<h1>Male Average Years of Educational Attainment: </h1>' + maleEdu;
 
-
-    //var properties = data.properties[attribute]
-//}
     //create marker default options
     L.geoJson(data, {
         style:style
@@ -172,18 +170,6 @@ function symbolize(data, map){
         .addTo(map);
     console.log(data)
 };
-
-//function popUP(data, map){
-   // var popupLayer = L.geoJson(data, {
-      //  onEachFeature: onEachFeatureFunction
-   // }).addTo(map);
-
-    //function onEachFeatureFunction(feature, layer){
-       // if (feature.properties.NAME_0) {
-            //layer.bindPopup(feature.properties.NAME_0);
-       // }
-   // };
-//};
 
 
 
