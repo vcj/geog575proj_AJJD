@@ -141,33 +141,28 @@ function style2(feature) {
     };
 }
 
+
+function onEachFeature(feature,layer) {
+    var countryName = feature.properties.NAME_0;
+    var regionName = feature.properties.NAME_1;
+    var nov22Food = feature.properties.Nov_2022.toFixed(4)*100;
+    var femaleEdu = feature.properties.Female_Edu.toFixed(1);
+    var maleEdu = feature.properties.Male_Educa.toFixed(1);
+    var popupContent = '<b>' + regionName + ', ' + countryName + '</b><br>' +
+        'Insufficient Food Consumption (Nov 2022): <b>' + nov22Food.toFixed(2) + '%</b><br>Female Avg. Years of Educational Attainment: <b>'
+        + femaleEdu + '</b><br>Male Avg Years of Educational Attainment: <b>' + maleEdu + '</b><br>'
+       ;
+    layer.bindPopup(popupContent)
+    //layer.bindTooltip(regionName)
+}
+
+
 // function for original symbology with popups
 function symbolize(data, map){
-
-    //for loop to assign variable to each needed property
-    for (i in data.features) {
-        var countryName = data.features[i].properties.NAME_0;
-        //console.log(countryName)
-        var regionName = data.features[i].properties.NAME_1;
-        var nov22Food = data.features[i].properties.Nov_2022;
-        var femaleEdu = data.features[i].properties.Female_Edu;
-        var maleEdu = data.features[i].properties.Male_Educa;
-
-    for (key in data.features.properties) {
-        console.log(key + data.features.properties[key])
-        popupContent = popupContent + key + ': ' + data.features.properties[key];
-        };
-   };
-
-    var popupContent = '<h1>Country: </h1>' + countryName + '<h1>Region: </h1>' + regionName +
-        '<h1> Percent of Population with Insufficient Food Consumption November 2022: </h1>' + nov22Food + '<h1>Female Average Years of Educational Attainment: </h1>'
-        + femaleEdu + '<h1>Male Average Years of Educational Attainment: </h1>' + maleEdu;
-
-    //create marker default options
     L.geoJson(data, {
-        style:style
+        style:style,
+        onEachFeature: onEachFeature
             })
-        .bindPopup(popupContent)
         .addTo(map);
     console.log(data)
 };
