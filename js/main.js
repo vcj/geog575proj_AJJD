@@ -142,6 +142,7 @@ function style2(feature) {
 }
 
 
+
 function onEachFeature(feature,layer) {
     var countryName = feature.properties.NAME_0;
     var regionName = feature.properties.NAME_1;
@@ -152,10 +153,53 @@ function onEachFeature(feature,layer) {
     var maleEdu = feature.properties.Male_Educa.toFixed(1);
     var popupContent = '<b>' + regionName + ', ' + countryName + '</b><br>' +
         'Insufficient Food Consumption (Nov 2022): <b>' + nov22Food+ '%</b><br>Female Avg. Years of Educational Attainment: <b>'
-        + femaleEdu + '</b><br>Male Avg Years of Educational Attainment: <b>' + maleEdu + '</b><br>'
-       ;
-    layer.bindPopup(popupContent)
-    //layer.bindTooltip(regionName)
+        + femaleEdu + '</b><br>Male Avg Years of Educational Attainment: <b>' + maleEdu + '</b><br>';
+    //working on sparkline
+    var div = $('<div id="container' + feature.properties.FID +'" style="width: 200px; height:20px;"><svg/></div>')[0]
+    
+    var featureList =[feature.properties.Oct_2021,feature.properties.Nov_2021,feature.properties.Dec_2021,feature.properties.Jan_2022,feature.properties.Feb_2022,feature.properties.Mar_2022,feature.properties.Apr_2022,feature.properties.May_2022,feature.properties.Jun_2022,feature.properties.Jul_2022,feature.properties.Aug_2022,feature.properties.Sep_2022,feature.properties.Oct_2022,feature.properties.Nov_2022]
+    // create charts
+
+    var svg = d3.select(div).select("svg").attr("width", 200).attr("height", 20);
+    
+    var xScale = d3.scaleLinear()
+      .domain([0, 13])
+      .range([80, 160]) // 600 is our chart width
+
+    var yScale = d3.scaleLinear()
+      .domain([0, 1])
+      .range([20, 0]) // 400 is our chart height
+            
+    var line = d3.line()
+      .x(d => xScale(d.x))
+      .y(d => yScale(d.y))    
+    
+    svg
+      .append('path') // add a path to the existing svg
+      .datum([
+    { x: 0,   y: feature.properties.Oct_2021 },
+    { x: 1,  y: feature.properties.Nov_2021 },
+    { x: 2,  y: feature.properties.Dec_2021 },
+    { x: 3,  y: feature.properties.Jan_2022 },
+    { x: 4,  y: feature.properties.Feb_2022 },
+    { x: 5, y: feature.properties.Mar_2022 },
+    { x: 6,  y: feature.properties.Apr_2022 },
+    { x: 7,  y: feature.properties.May_2022 },
+    { x: 8,  y: feature.properties.Jun_2022 },
+    { x: 9,  y: feature.properties.Jul_2022 },
+    { x: 10, y: feature.properties.Aug_2022 },
+    { x: 11,  y: feature.properties.Sep_2022 },
+    { x: 12,  y: feature.properties.Oct_2022 },
+    { x: 13,  y: feature.properties.Nov_2022 }
+  ])
+  .attr('d', line) // do your magic, line!
+    .style("stroke","red")
+    .style("stroke-width",3);
+    
+    var popup = L.popup().setContent( div );
+    //var popup = L.popup().setContent(stage);
+    layer.bindPopup(popup)
+    layer.bindTooltip(regionName)
 }
 
 
