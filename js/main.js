@@ -146,7 +146,7 @@ function style2(feature) {
 function onEachFeature(feature,layer) {
     var countryName = feature.properties.NAME_0;
     var regionName = feature.properties.NAME_1;
-    if (feature.properties.Nov_2022 == -.1) { 
+    if (feature.properties.Nov_2022 <= 0) { 
          var nov22Food = "No Data"} else
      {var nov22Food = (feature.properties.Nov_2022*100).toFixed(1)};
     var femaleEdu = feature.properties.Female_Edu.toFixed(1);
