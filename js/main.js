@@ -156,7 +156,7 @@ function onEachFeature(feature,layer) {
         + femaleEdu + '</b><br>Male Avg Years of Educational Attainment: <b>' + maleEdu + '</b><br>Insufficient Food Consumption Trend: ';
     //working on sparkline
     var featureList =[feature.properties.Oct_2021,feature.properties.Nov_2021,feature.properties.Dec_2021,feature.properties.Jan_2022,feature.properties.Feb_2022,feature.properties.Mar_2022,feature.properties.Apr_2022,feature.properties.May_2022,feature.properties.Jun_2022,feature.properties.Jul_2022,feature.properties.Aug_2022,feature.properties.Sep_2022,feature.properties.Oct_2022,feature.properties.Nov_2022]
-    var div = $('<div id="container' + feature.properties.FID +'" style="width: 267px; height:80px;">'+popupContent+'<svg/></div>')[0]
+    var div = $('<div id="container' + feature.properties.FID +'" style="width: 280px; height:80px;">'+popupContent+'<svg/></div>')[0]
     // create charts
     var ele = document.getElementById('container'+feature.properties.FID );
     //console.log(ele)
