@@ -168,7 +168,7 @@ function onEachFeature(feature,layer) {
       .range([10, 50]) // 600 is our chart width
 
     var yScale = d3.scaleLinear()
-      .domain([0, .8])
+      .domain([0, .9])
       .range([20, 0]) // 400 is our chart height
             
     var line = d3.line()
