@@ -146,33 +146,38 @@ function style2(feature) {
 function onEachFeature(feature,layer) {
     var countryName = feature.properties.NAME_0;
     var regionName = feature.properties.NAME_1;
-    if (feature.properties.Nov_2022 == -.1) { 
+    if (feature.properties.Nov_2022 <= 0) { 
          var nov22Food = "No Data"} else
-     {var nov22Food = (feature.properties.Nov_2022*100).toFixed(1)};
+     {var nov22Food = (feature.properties.Nov_2022*100).toFixed(1)+"%"};
     var femaleEdu = feature.properties.Female_Edu.toFixed(1);
     var maleEdu = feature.properties.Male_Educa.toFixed(1);
     var popupContent = '<b>' + regionName + ', ' + countryName + '</b><br>' +
-        'Insufficient Food Consumption (Nov 2022): <b>' + nov22Food+ '%</b><br>Female Avg. Years of Educational Attainment: <b>'
-        + femaleEdu + '</b><br>Male Avg Years of Educational Attainment: <b>' + maleEdu + '</b><br>';
+        'Insufficient Food Consumption Nov-2022: <b>' + nov22Food+ '</b><br>Female Avg. Years of Educational Attainment: <b>'
+        + femaleEdu + '</b><br>Male Avg Years of Educational Attainment: <b>' + maleEdu + '</b><br>Insufficient Food Consumption Trend: ';
     //working on sparkline
-    var div = $('<div id="container' + feature.properties.FID +'" style="width: 200px; height:20px;"><svg/></div>')[0]
-    
     var featureList =[feature.properties.Oct_2021,feature.properties.Nov_2021,feature.properties.Dec_2021,feature.properties.Jan_2022,feature.properties.Feb_2022,feature.properties.Mar_2022,feature.properties.Apr_2022,feature.properties.May_2022,feature.properties.Jun_2022,feature.properties.Jul_2022,feature.properties.Aug_2022,feature.properties.Sep_2022,feature.properties.Oct_2022,feature.properties.Nov_2022]
+    var div = $('<div id="container' + feature.properties.FID +'" style="width: 280px; height:80px;">'+popupContent+'<svg/></div>')[0]
     // create charts
-
-    var svg = d3.select(div).select("svg").attr("width", 200).attr("height", 20);
+    var ele = document.getElementById('container'+feature.properties.FID );
+    //console.log(ele)
+    //ele.innerHTML(popupContent)
+    var svg = d3.select(div).select("svg").attr("width", 60).attr("height", 20);
     
     var xScale = d3.scaleLinear()
       .domain([0, 13])
-      .range([80, 160]) // 600 is our chart width
+      .range([10, 50]) // 600 is our chart width
 
     var yScale = d3.scaleLinear()
-      .domain([0, 1])
+      .domain([0, .9])
       .range([20, 0]) // 400 is our chart height
             
     var line = d3.line()
       .x(d => xScale(d.x))
-      .y(d => yScale(d.y))    
+      .y(d => yScale(d.y))
+    
+    var gradientColor = (p) => {
+    return d3.interpolateHslLong("red", "blue")((p[0].value-bounds[0])/interval);
+  };
     
     svg
       .append('path') // add a path to the existing svg
@@ -192,9 +197,10 @@ function onEachFeature(feature,layer) {
     { x: 12,  y: feature.properties.Oct_2022 },
     { x: 13,  y: feature.properties.Nov_2022 }
   ])
-  .attr('d', line) // do your magic, line!
+    .attr('d', line) // do your magic, line!
     .style("stroke","red")
-    .style("stroke-width",3);
+    .style("stroke-width",2)
+    .style("fill","white");
     
     var popup = L.popup().setContent( div );
     //var popup = L.popup().setContent(stage);
