@@ -148,11 +148,11 @@ function onEachFeature(feature,layer) {
     var regionName = feature.properties.NAME_1;
     if (feature.properties.Nov_2022 <= 0) { 
          var nov22Food = "No Data"} else
-     {var nov22Food = (feature.properties.Nov_2022*100).toFixed(1)};
+     {var nov22Food = (feature.properties.Nov_2022*100).toFixed(1)+"%"};
     var femaleEdu = feature.properties.Female_Edu.toFixed(1);
     var maleEdu = feature.properties.Male_Educa.toFixed(1);
     var popupContent = '<b>' + regionName + ', ' + countryName + '</b><br>' +
-        'Insufficient Food Consumption (Nov 2022): <b>' + nov22Food+ '%</b><br>Female Avg. Years of Educational Attainment: <b>'
+        'Insufficient Food Consumption Nov-2022: <b>' + nov22Food+ '</b><br>Female Avg. Years of Educational Attainment: <b>'
         + femaleEdu + '</b><br>Male Avg Years of Educational Attainment: <b>' + maleEdu + '</b><br>Insufficient Food Consumption Trend: ';
     //working on sparkline
     var featureList =[feature.properties.Oct_2021,feature.properties.Nov_2021,feature.properties.Dec_2021,feature.properties.Jan_2022,feature.properties.Feb_2022,feature.properties.Mar_2022,feature.properties.Apr_2022,feature.properties.May_2022,feature.properties.Jun_2022,feature.properties.Jul_2022,feature.properties.Aug_2022,feature.properties.Sep_2022,feature.properties.Oct_2022,feature.properties.Nov_2022]
