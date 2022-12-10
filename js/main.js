@@ -306,14 +306,14 @@ function manageSequence(map, data, attributes, viztype){
             index = index > 13 ? 0 : index;
             $('.range-slider').val(index);
             updateSymbols(map, attributes[index],viztype);
-            //updateLegend(map, data, attributes,viztype);
+            updateLegend(map, data, attributes,viztype);
         } else if ($(this).attr('id') == 'reverse'){
             index--;
             //Step 7: if past the first attribute, wrap around to last attribute
             index = index < 0 ? 13 : index;
             $('.range-slider').val(index);
             updateSymbols(map, attributes[index],viztype);
-            //updateLegend(map, data, attributes,viztype);
+            updateLegend(map, data, attributes,viztype);
         };
 
         //Step 8: update slider
@@ -324,13 +324,13 @@ function manageSequence(map, data, attributes, viztype){
         //get the old index value
         var index = $('.range-slider').val();
         updateSymbols(map, attributes[index], viztype);
-        //updateLegend(map, data, attributes,viztype);
-        //console.log(index)
+        updateLegend(map, data, attributes, viztype);
+        console.log(index)
     })
     //update even if it wasnt clicked (manageSequence is called by viztype)
     var index = $('.range-slider').val()
     updateSymbols(map, attributes[index], viztype);
-    //updateLegend(map, data, attributes,viztype);
+    updateLegend(map, data, attributes,viztype);
 };
 
 // Create Buttons to switch viz type
@@ -345,34 +345,34 @@ function selectVizType(map, data, attributes, viztype2) {
         //change color of selected button
         $('button').removeClass('active');
         $(this).addClass('active');
-        // if the button is slected, change the viztype, then run manage, update
+        // if the button is selected, change the viztype, then run manage, update
         //console.log($(this).attr('id'))
         if ($(this).attr('id') == 'result'){
             viztype2 = "Food_Edu"
             updateSymbols(map, attributes[16],viztype2);
             removeControls(map)
-            //updateLegend(map, data, attributes,viztype2);
-            //moveLegend(viztype2);
+            updateLegend(map, data, attributes,viztype2);
+            moveLegend(viztype2);
             ;}
          else if ($(this).attr('id') == 'ifs'){
             viztype2 = "Oct_2021"
             createControls(map,viztype2)
             manageSequence(map,data,attributes, viztype2);
-           // updateLegend(map, data);
+            updateLegend(map, data);
          }
          else if ($(this).attr('id') == 'f_edu'){
             viztype2 = "Female_Edu"
             updateSymbols(map, attributes[14],viztype2);
             removeControls(map)
-            //updateLegend(map, data, attributes,viztype2);
-            //moveLegend(viztype2);
+            updateLegend(map, data, attributes,viztype2);
+//            moveLegend(viztype2);
          }
          else if ($(this).attr('id') == 'm_edu'){
             viztype2 = "Male_Educa"
              updateSymbols(map, attributes[15],viztype2);
              removeControls(map)
-         //updateLegend(map, data, attributes,viztype2);
-            // moveLegend(viztype2);
+         updateLegend(map, data, attributes,viztype2);
+//             moveLegend(viztype2);
          }
     });
    
@@ -405,19 +405,151 @@ function getMin(arr, prop) {
 
 
 //create original legend
+
 function createLegend(map, data, attributes,viztype) {
     var legend2 = L.control({position: 'topleft'});
     legend2.onAdd = function(map) { 
     var div = L.DomUtil.create('div', 'colorLegend'),
-    grades = [0,10,25,50,75,100,125];
+    grades = ["High IFC, High Edu","High IFC, Low Edu","Lower  IFC, High Edu","Lower IFC, Low Edu"];
     for (var i = 0; i < grades.length; i++) {
     div.innerHTML += '<i style="background:' + calcColor(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
     }
     return div;
     };
+    //legend2.addTo(map);
+    //console.log(viztype)
+    var min = getMin(data.responseJSON.features, attributes[14])
+    var max = getMax(data.responseJSON.features, attributes[14])
+    if (min < 10) {	min = 10;}
+		function roundNumber(inNumber) {
+				return (Math.round(inNumber/10) * 10);  
+		}
+		var legend = L.control( { position: 'topleft' } );
+		legend.onAdd = function(map) {
+		var legendContainer = L.DomUtil.create("div", "legend");  
+		var symbolsContainer = L.DomUtil.create("div", "symbolsContainer");
+		var classes = [roundNumber(min), roundNumber((max-min)/2.5), roundNumber(max)]; 
+		var margin;
+		L.DomEvent.addListener(legendContainer, 'mousedown', function(e) { 
+			L.DomEvent.stopPropagation(e); 
+		});  
+        year = Number($('.range-slider').val())
+		$(legendContainer).append("<h2 id='legendTitle'>Insufficient Food <br>Consumption (IFC)<br>& Education Levels</h2>");
+		$(legendContainer).append(symbolsContainer); 
+        //add the color legend inside the existing legend.
+        var div = L.DomUtil.create('div', 'colorLegend'),
+        grades = ["High IFC, High Edu","High IFC, Low Edu","Lower  IFC, High Edu","Lower IFC, Low Edu"];
+        for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=  '<i style="background:' + calcColor(grades[i]) + '"></i> ' + grades[i] + '<br>';};
+        
+        $(legendContainer).append(div); 
 
+		return legendContainer; 
+		};
+        
+		legend.addTo(map);  
+        // add color legend
+
+    //legend2.addTo(map);
 	} // end createLegend();
 
+
+
+//update legend
+function updateLegend(map, data, attributes,viztype2) {
+    range_index = Number($('.range-slider').val())
+    year = Number($('.range-slider').val())
+    if (viztype2 == "Oct_2021") {
+        //Update Circles L
+        var content = "Percent of Population<br>with Insufficient<br>Food Consumption";
+        $('#legendTitle').html(content)
+        //Update Color Legend
+        var pp1CL =  document.getElementById('map').getElementsByClassName('colorLegend')[0]
+        pp1CL.innerHTML = ""
+        var grades = [.0001,.05,.1,.2,.3,.4];
+        for (var i = 0; i < grades.length; i++) {
+        pp1CL.innerHTML += '<i style="background:' + calcColor(grades[i] + 1) + '"></i> ' + (grades[i]*100) +'%' + (grades[i + 1] ? '&nbsp;&ndash;&nbsp;' + grades[i + 1] + '<br>' : '+');}
+    
+          } 
+    else if (viztype2 == "Female_Edu") {
+        var content2 = "Years of Female<br>Educational<br>Attainment (average)";
+        $('#legendTitle').html(content2); 
+          //Update Color Legend
+         var pp1CL =  document.getElementById('map').getElementsByClassName('colorLegend')[0]
+        pp1CL.innerHTML = ""
+        var grades = [2,4,6,8,10,12];
+        for (var i = 0; i < grades.length; i++) {
+        pp1CL.innerHTML += '<i style="background:' + calcColor(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '&nbsp;&ndash;&nbsp;' + grades[i + 1] + '<br>' : '+');}
+    }
+
+    else if (viztype2 == "Male_Edu") {
+        var content2 = "Years of Male<br>Educational<br>Attainment (average)";
+        $('#legendTitle').html(content2); 
+          //Update Color Legend
+         var pp1CL =  document.getElementById('map').getElementsByClassName('colorLegend')[0]
+        pp1CL.innerHTML = ""
+        var grades = [2,4,6,8,10,12];
+        for (var i = 0; i < grades.length; i++) {
+        pp1CL.innerHTML += '<i style="background:' + calcColor(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '&nbsp;&ndash;&nbsp;' + grades[i + 1] + '<br>' : '+');}
+    }
+
+    // end createLegend();
+}
+
+//figure out how to move legend exactly where I want it
+//
+//function moveLegend(viztype) {
+//     if (viztype == "ppm_viz"){
+//            var panel2h = $("#panel2").height() + 460;
+//            var legendLoc = window.innerHeight - panel2h
+//            var ltll = document.querySelector('.leaflet-top.leaflet-left')
+//            ltll.style.top = legendLoc+"px";
+//    // console.log(legendLoc)
+//     }
+//             //update color and size if percent change
+//            else if (viztype == "ppm_change") {
+//            var panel2h = $("#panel2").height() + 475;
+//            var legendLoc = window.innerHeight - panel2h
+//            var ltll = document.querySelector('.leaflet-top.leaflet-left')
+//            ltll.style.top = legendLoc+"px";
+//             // console.log(legendLoc)
+//            }
+//            //update color and size if percent change
+//            else if ( viztype2 == "ppm_pctChange") {
+//            var panel2h = $("#panel2").height() + 495;
+//            var legendLoc = window.innerHeight - panel2h
+//            var ltll = document.querySelector('.leaflet-top.leaflet-left')
+//            ltll.style.top = legendLoc+"px";
+//             // console.log(legendLoc)
+//            }
+//
+//    //resize when it moves
+//    addEventListener('resize', (event) => {});
+//    onresize = (event) => {  if (viztype == "ppm_viz"){
+//            var panel2h = $("#panel2").height() + 460;
+//            var legendLoc = window.innerHeight - panel2h
+//            var ltll = document.querySelector('.leaflet-top.leaflet-left')
+//            ltll.style.top = legendLoc+"px";
+//    // console.log(legendLoc)
+//    }
+//             //update color and size if percent change
+//            else if (viztype == "ppm_change") {
+//            var panel2h = $("#panel2").height() + 475;
+//            var legendLoc = window.innerHeight - panel2h
+//            var ltll = document.querySelector('.leaflet-top.leaflet-left')
+//            ltll.style.top = legendLoc+"px";
+//             // console.log(legendLoc)
+//            }
+//            //update color and size if percent change
+//            else if ( viztype == "ppm_pctChange") {
+//            var panel2h = $("#panel2").height() + 495;
+//            var legendLoc = window.innerHeight - panel2h
+//            var ltll = document.querySelector('.leaflet-top.leaflet-left')
+//            ltll.style.top = legendLoc+"px";
+//            //  console.log(legendLoc)
+//            }};
+//
+//}
 
 
 
@@ -434,9 +566,9 @@ function getData(map){
             symbolize(response, map,attributes,viztype);
             symbolizeLines(data, map);
             addSearch(map, data);
-            //createLegend(map, data, attributes,viztype);
+            createLegend(map, data, attributes,viztype);
             selectVizType(map,data,attributes,viztype);
-            //moveLegend(viztype);
+//            moveLegend(viztype);
         }
     
     });
