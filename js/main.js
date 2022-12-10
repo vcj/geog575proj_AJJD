@@ -482,7 +482,7 @@ function updateLegend(map, data, attributes,viztype2) {
         pp1CL.innerHTML += '<i style="background:' + calcColor(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '&nbsp;&ndash;&nbsp;' + grades[i + 1] + '<br>' : '+');}
     }
 
-    else if (viztype2 == "Male_Edu") {
+    else if (viztype2 == "Male_Educa") {
         var content2 = "Years of Male<br>Educational<br>Attainment (average)";
         $('#legendTitle').html(content2); 
           //Update Color Legend
