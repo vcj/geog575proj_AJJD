@@ -184,7 +184,7 @@ function onEachFeature(feature,layer) {
       .range([10, 50]) // 600 is our chart width
 
     var yScale = d3.scaleLinear()
-      .domain([0, .9])
+      .domain([0, 1])
       .range([20, 0]) // 400 is our chart height
             
     var line = d3.line()
@@ -500,62 +500,6 @@ function updateLegend(map, data, attributes,viztype2) {
 
     // end createLegend();
 }
-
-//figure out how to move legend exactly where I want it
-//
-//function moveLegend(viztype) {
-//     if (viztype == "ppm_viz"){
-//            var panel2h = $("#panel2").height() + 460;
-//            var legendLoc = window.innerHeight - panel2h
-//            var ltll = document.querySelector('.leaflet-top.leaflet-left')
-//            ltll.style.top = legendLoc+"px";
-//    // console.log(legendLoc)
-//     }
-//             //update color and size if percent change
-//            else if (viztype == "ppm_change") {
-//            var panel2h = $("#panel2").height() + 475;
-//            var legendLoc = window.innerHeight - panel2h
-//            var ltll = document.querySelector('.leaflet-top.leaflet-left')
-//            ltll.style.top = legendLoc+"px";
-//             // console.log(legendLoc)
-//            }
-//            //update color and size if percent change
-//            else if ( viztype2 == "ppm_pctChange") {
-//            var panel2h = $("#panel2").height() + 495;
-//            var legendLoc = window.innerHeight - panel2h
-//            var ltll = document.querySelector('.leaflet-top.leaflet-left')
-//            ltll.style.top = legendLoc+"px";
-//             // console.log(legendLoc)
-//            }
-//
-//    //resize when it moves
-//    addEventListener('resize', (event) => {});
-//    onresize = (event) => {  if (viztype == "ppm_viz"){
-//            var panel2h = $("#panel2").height() + 460;
-//            var legendLoc = window.innerHeight - panel2h
-//            var ltll = document.querySelector('.leaflet-top.leaflet-left')
-//            ltll.style.top = legendLoc+"px";
-//    // console.log(legendLoc)
-//    }
-//             //update color and size if percent change
-//            else if (viztype == "ppm_change") {
-//            var panel2h = $("#panel2").height() + 475;
-//            var legendLoc = window.innerHeight - panel2h
-//            var ltll = document.querySelector('.leaflet-top.leaflet-left')
-//            ltll.style.top = legendLoc+"px";
-//             // console.log(legendLoc)
-//            }
-//            //update color and size if percent change
-//            else if ( viztype == "ppm_pctChange") {
-//            var panel2h = $("#panel2").height() + 495;
-//            var legendLoc = window.innerHeight - panel2h
-//            var ltll = document.querySelector('.leaflet-top.leaflet-left')
-//            ltll.style.top = legendLoc+"px";
-//            //  console.log(legendLoc)
-//            }};
-//
-//}
-
 
 
 
