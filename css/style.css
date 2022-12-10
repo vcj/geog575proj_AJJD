@@ -236,7 +236,7 @@ input[type="range"]:focus::-webkit-slider-thumb {
 .legend, .temporal-legend {
 	padding: 6px 10px;
 	font: 14px/16px;
-    font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif; 
+    font-family: Gill Sans,Gill Sans MT,Gill Sans,sans-serif; 
 	background: white;
 	background: rgba(255,255,255,.9);
 	box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -252,14 +252,16 @@ input[type="range"]:focus::-webkit-slider-thumb {
 	float: left;
 	margin-left: 40%;
 }
+/*
 .legendCircle {
  	border-radius:50%; 
  	border: 1px solid #537898; 
     background: rgba(113, 133, 152, .6);
  	display: inline-block;
+*/
 }
 .legendValue {
-	position: absolute;
+	position: relative;
 	right: 20%;
 }
 .colorLegend {
@@ -269,7 +271,7 @@ font-family:Gill Sans,Gill Sans MT,Calibri,sans-serif;
 background: rgba(255,255,255,0);
 box-shadow: 0 0 15px rgba(0,0,0,0);
 border-radius: 5px;
-margin-top: 50px;
+margin-top: 5px;
 }
 .colorLegend i {
 width: 14px;
