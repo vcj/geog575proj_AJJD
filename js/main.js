@@ -71,7 +71,8 @@ function addSearch(map, data) {
 //calculate a color for each symbol for recent insufficient fcs
 function initColor(attValue) {
     //scale factor to adjust symbol size evenly
-    return attValue == "High IFC, High Edu" ? '#574249' :
+    return attValue == "High and Rising IFC, High Edu" ? '#574249' :
+    attValue == "High IFC, High Edu" ? '#574249' :
     attValue == "High IFC, Low Edu" ? '#c85a5a' : // Means: if (d >= 1966) return 'green' else…
     attValue == "Lower  IFC, High Edu" ? '#64acbe' : // if (d >= 1960) return 'black' else etc…
     attValue == "Lower IFC, Low Edu" ? '#e8e8e8' :
@@ -92,6 +93,21 @@ function initBorderWeight(attValue, attValue2) {
     //scale factor to adjust symbol size evenly
     return (attValue == "Rising 2" && attValue2 == "High IFC, High Edu") ? 2 :
     .5;
+};
+
+
+//calculate a color for each symbol for recent insufficient fcs
+function legendBorderWeight(attValue, attValue2) {
+    //scale factor to adjust symbol size evenly
+    return (attValue == "High and Rising IFC, High Edu") ? 2 :
+    .5;
+};
+
+//calculate a color for each symbol for recent insufficient fcs
+function legendColorBorder(attValue, attValue2) {
+    //scale factor to adjust symbol size evenly
+    return  (attValue == "High and Rising IFC, High Edu") ? '#FFE43E' :
+    '#FFFFFF';
 };
 
 //calculate a color for each symbol for recent insufficient fcs
@@ -407,40 +423,21 @@ function getMin(arr, prop) {
 //create original legend
 
 function createLegend(map, data, attributes,viztype) {
-    var legend2 = L.control({position: 'topleft'});
-    legend2.onAdd = function(map) { 
-    var div = L.DomUtil.create('div', 'colorLegend'),
-    grades = ["High IFC, High Edu","High IFC, Low Edu","Lower  IFC, High Edu","Lower IFC, Low Edu"];
-    for (var i = 0; i < grades.length; i++) {
-    div.innerHTML += '<i style="background:' + calcColor(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-    }
-    return div;
-    };
-    //legend2.addTo(map);
-    //console.log(viztype)
-    var min = getMin(data.responseJSON.features, attributes[14])
-    var max = getMax(data.responseJSON.features, attributes[14])
-    if (min < 10) {	min = 10;}
-		function roundNumber(inNumber) {
-				return (Math.round(inNumber/10) * 10);  
-		}
-		var legend = L.control( { position: 'topleft' } );
-		legend.onAdd = function(map) {
+	var legend = L.control( { position: 'topleft' } );
+	legend.onAdd = function(map) {
 		var legendContainer = L.DomUtil.create("div", "legend");  
 		var symbolsContainer = L.DomUtil.create("div", "symbolsContainer");
-		var classes = [roundNumber(min), roundNumber((max-min)/2.5), roundNumber(max)]; 
 		var margin;
 		L.DomEvent.addListener(legendContainer, 'mousedown', function(e) { 
 			L.DomEvent.stopPropagation(e); 
 		});  
-        year = Number($('.range-slider').val())
 		$(legendContainer).append("<h2 id='legendTitle'>Insufficient Food <br>Consumption (IFC)<br>& Education Levels</h2>");
 		$(legendContainer).append(symbolsContainer); 
         //add the color legend inside the existing legend.
         var div = L.DomUtil.create('div', 'colorLegend'),
-        grades = ["High IFC, High Edu","High IFC, Low Edu","Lower  IFC, High Edu","Lower IFC, Low Edu"];
+        grades = ["High and Rising IFC, High Edu","High IFC, High Edu","High IFC, Low Edu","Lower  IFC, High Edu","Lower IFC, Low Edu"];
         for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=  '<i style="background:' + calcColor(grades[i]) + '"></i> ' + grades[i] + '<br>';};
+        div.innerHTML +=  '<i style="background-color:' + initColor(grades[i]) + '; border: 2px solid '+ legendColorBorder(grades[i])+'"></i> ' + grades[i] + '<br>';};
         
         $(legendContainer).append(div); 
 
@@ -457,9 +454,7 @@ function createLegend(map, data, attributes,viztype) {
 
 //update legend
 function updateLegend(map, data, attributes,viztype2) {
-    range_index = Number($('.range-slider').val())
-    year = Number($('.range-slider').val())
-    if (viztype2 == "Oct_2021") {
+    if (viz_type.includes("20")) {
         //Update Circles L
         var content = "Percent of Population<br>with Insufficient<br>Food Consumption";
         $('#legendTitle').html(content)
@@ -468,7 +463,7 @@ function updateLegend(map, data, attributes,viztype2) {
         pp1CL.innerHTML = ""
         var grades = [.0001,.05,.1,.2,.3,.4];
         for (var i = 0; i < grades.length; i++) {
-        pp1CL.innerHTML += '<i style="background:' + calcColor(grades[i] + 1) + '"></i> ' + (grades[i]*100) +'%' + (grades[i + 1] ? '&nbsp;&ndash;&nbsp;' + grades[i + 1] + '<br>' : '+');}
+        pp1CL.innerHTML += '<i style="background:' + calcColor(grades[i]) + '"></i> ' + (grades[i]*100) +'%' + (grades[i + 1] ? '&nbsp;&ndash;&nbsp;' + (grades[i + 1]*100)+ '%<br>' : '+');}
     
           } 
     else if (viztype2 == "Female_Edu") {
@@ -479,7 +474,7 @@ function updateLegend(map, data, attributes,viztype2) {
         pp1CL.innerHTML = ""
         var grades = [2,4,6,8,10,12];
         for (var i = 0; i < grades.length; i++) {
-        pp1CL.innerHTML += '<i style="background:' + calcColor(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '&nbsp;&ndash;&nbsp;' + grades[i + 1] + '<br>' : '+');}
+        pp1CL.innerHTML += '<i style="background:' + calcColorEdu(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '&nbsp;&ndash;&nbsp;' + grades[i + 1] + '<br>' : '+');}
     }
 
     else if (viztype2 == "Male_Educa") {
@@ -490,7 +485,17 @@ function updateLegend(map, data, attributes,viztype2) {
         pp1CL.innerHTML = ""
         var grades = [2,4,6,8,10,12];
         for (var i = 0; i < grades.length; i++) {
-        pp1CL.innerHTML += '<i style="background:' + calcColor(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '&nbsp;&ndash;&nbsp;' + grades[i + 1] + '<br>' : '+');}
+        pp1CL.innerHTML += '<i style="background:' + calcColorEdu(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '&nbsp;&ndash;&nbsp;' + grades[i + 1] + '<br>' : '+');}
+    }
+    else if (viztype2 == "Food_Edu") {
+        var content2 = "Insufficient Food <br>Consumption (IFC)<br>& Education Levels";
+        $('#legendTitle').html(content2); 
+          //Update Color Legend
+        var pp1CL =  document.getElementById('map').getElementsByClassName('colorLegend')[0]
+        pp1CL.innerHTML = ""
+        grades = ["High and Rising IFC, High Edu","High IFC, High Edu","High IFC, Low Edu","Lower  IFC, High Edu","Lower IFC, Low Edu"];
+        for (var i = 0; i < grades.length; i++) {
+        pp1CL.innerHTML +=  '<i style="background-color:' + initColor(grades[i]) + '; border: 2px solid '+ legendColorBorder(grades[i])+'"></i> ' + grades[i] + '<br>';};
     }
 
     // end createLegend();
